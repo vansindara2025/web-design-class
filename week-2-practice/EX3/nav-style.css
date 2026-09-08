@@ -5,3 +5,546 @@
 /* TODO 3: Style the menu link buttons */
 
 /* TODO 4: Add hover state for menu items */
+
+/* =========================================================
+   Brew & Bean Coffee Co. — Shared Stylesheet
+   Used by: home.html, about.html, services.html, contact.html
+   ========================================================= */
+
+:root {
+  --coffee-dark: #3b2418;
+  --coffee-mid: #6f4e37;
+  --coffee-light: #a9744f;
+  --cream: #f5ead6;
+  --cream-light: #fdf8ef;
+  --accent: #d99a4e;
+  --text-dark: #2b1c12;
+  --text-light: #fdf8ef;
+  --shadow: rgba(59, 36, 24, 0.25);
+  --font-heading: 'Georgia', 'Times New Roman', serif;
+  --font-body: 'Trebuchet MS', Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--text-dark);
+  background-color: var(--cream-light);
+  line-height: 1.6;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* -------------------- Navigation Bar -------------------- */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--coffee-dark);
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.navbar .nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.nav-logo {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  color: var(--cream);
+  letter-spacing: 1px;
+}
+
+.nav-logo span {
+  color: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-links li a {
+  display: inline-block;
+  padding: 10px 16px;
+  color: var(--cream);
+  font-weight: bold;
+  border-radius: 20px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+  background-color: var(--accent);
+  color: var(--coffee-dark);
+}
+
+/* -------------------- Generic Section Helpers -------------------- */
+
+section {
+  padding: 70px 0;
+}
+
+section:nth-of-type(even) {
+  background-color: var(--cream);
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  color: var(--coffee-dark);
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.section-subtitle {
+  text-align: center;
+  color: var(--coffee-mid);
+  max-width: 650px;
+  margin: 0 auto 40px auto;
+  font-size: 1.05rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 14px 32px;
+  background-color: var(--accent);
+  color: var(--coffee-dark);
+  font-weight: bold;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--coffee-light);
+  color: var(--text-light);
+  transform: translateY(-2px);
+}
+
+/* -------------------- Footer (shared) -------------------- */
+
+.site-footer {
+  background-color: var(--coffee-dark);
+  color: var(--cream);
+  text-align: center;
+  padding: 30px 0;
+}
+
+.site-footer a {
+  color: var(--accent);
+}
+
+/* =========================================================
+   1) HOME PAGE STYLES
+   ========================================================= */
+
+.home-hero {
+  background: linear-gradient(rgba(59, 36, 24, 0.65), rgba(59, 36, 24, 0.65)),
+    url('https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1400&q=80')
+    center/cover no-repeat;
+  color: var(--text-light);
+  text-align: center;
+  padding: 140px 24px;
+}
+
+.home-hero h1 {
+  font-family: var(--font-heading);
+  font-size: 3.2rem;
+  margin-bottom: 16px;
+}
+
+.home-hero p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 30px auto;
+}
+
+.home-features {
+  background-color: var(--cream-light);
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+}
+
+.feature-card {
+  background-color: var(--cream);
+  padding: 30px 24px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.feature-card .icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+
+.home-menu-preview {
+  background-color: var(--cream);
+}
+
+.menu-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.menu-preview-card {
+  background-color: var(--cream-light);
+  border: 1px solid var(--coffee-light);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.menu-preview-card img {
+  height: 180px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.menu-preview-card .info {
+  padding: 16px 18px;
+}
+
+.menu-preview-card .info h3 {
+  font-family: var(--font-heading);
+  color: var(--coffee-dark);
+  margin-bottom: 6px;
+}
+
+.menu-preview-card .info .price {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.home-cta {
+  background-color: var(--coffee-mid);
+  color: var(--text-light);
+  text-align: center;
+}
+
+.home-cta .section-title,
+.home-cta .section-subtitle {
+  color: var(--text-light);
+}
+
+/* =========================================================
+   2) ABOUT PAGE STYLES
+   ========================================================= */
+
+.about-hero {
+  background-color: var(--coffee-mid);
+  color: var(--text-light);
+  text-align: center;
+  padding: 90px 24px;
+}
+
+.about-hero h1 {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+}
+
+.about-story {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+}
+
+.about-story .about-text {
+  flex: 1 1 320px;
+}
+
+.about-story .about-image {
+  flex: 1 1 320px;
+}
+
+.about-story .about-image img {
+  border-radius: 12px;
+  box-shadow: 0 6px 16px var(--shadow);
+}
+
+.about-story h2 {
+  font-family: var(--font-heading);
+  color: var(--coffee-dark);
+  margin-bottom: 16px;
+  font-size: 1.8rem;
+}
+
+.about-values {
+  background-color: var(--cream);
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+}
+
+.value-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.value-card .icon {
+  font-size: 2.2rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+.about-team {
+  background-color: var(--cream-light);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+}
+
+.team-card h3 {
+  font-family: var(--font-heading);
+  color: var(--coffee-dark);
+}
+
+.team-card p {
+  color: var(--coffee-mid);
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   3) SERVICES PAGE STYLES
+   ========================================================= */
+
+.services-hero {
+  background: linear-gradient(rgba(59, 36, 24, 0.7), rgba(59, 36, 24, 0.7)),
+    url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=1400&q=80')
+    center/cover no-repeat;
+  color: var(--text-light);
+  text-align: center;
+  padding: 110px 24px;
+}
+
+.services-hero h1 {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+}
+
+.services-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 26px;
+}
+
+.service-card {
+  background-color: var(--cream-light);
+  border-radius: 12px;
+  padding: 30px 26px;
+  box-shadow: 0 4px 12px var(--shadow);
+  border-top: 4px solid var(--accent);
+}
+
+.service-card h3 {
+  font-family: var(--font-heading);
+  color: var(--coffee-dark);
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.services-menu {
+  background-color: var(--cream);
+}
+
+.menu-table {
+  width: 100%;
+  border-collapse: collapse;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: var(--cream-light);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.menu-table th,
+.menu-table td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--coffee-light);
+}
+
+.menu-table th {
+  background-color: var(--coffee-dark);
+  color: var(--cream);
+  font-family: var(--font-heading);
+}
+
+.menu-table tr:last-child td {
+  border-bottom: none;
+}
+
+.services-process .process-steps {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+  counter-reset: step;
+}
+
+.process-step {
+  flex: 1 1 200px;
+  text-align: center;
+}
+
+.process-step .step-number {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  color: var(--coffee-dark);
+  font-weight: bold;
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px auto;
+}
+
+/* =========================================================
+   4) CONTACT PAGE STYLES
+   ========================================================= */
+
+.contact-hero {
+  background-color: var(--coffee-dark);
+  color: var(--text-light);
+  text-align: center;
+  padding: 90px 24px;
+}
+
+.contact-hero h1 {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+}
+
+.contact-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.contact-info {
+  flex: 1 1 300px;
+}
+
+.contact-info .info-item {
+  margin-bottom: 26px;
+}
+
+.contact-info .info-item h3 {
+  font-family: var(--font-heading);
+  color: var(--coffee-dark);
+  margin-bottom: 6px;
+}
+
+.contact-form {
+  flex: 1 1 380px;
+  background-color: var(--cream-light);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.contact-form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: var(--coffee-dark);
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 18px;
+  border: 1px solid var(--coffee-light);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.contact-map {
+  background-color: var(--cream);
+}
+
+.map-placeholder {
+  width: 100%;
+  height: 320px;
+  background-color: var(--coffee-light);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+}
+
+/* -------------------- Responsive -------------------- */
+
+@media (max-width: 600px) {
+  .navbar .nav-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .home-hero h1,
+  .about-hero h1,
+  .services-hero h1,
+  .contact-hero h1 {
+    font-size: 2.1rem;
+  }
+}
