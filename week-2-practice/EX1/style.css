@@ -1,8 +1,24 @@
 /* TODO 1: Change body font-family */
 body {
-  background-color: #f4f4f9;
-}
-
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9
+      margin: 20px;
+    }
+    h1 {
+      color: #ff5733;
+    }
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 20px;
+    }
+    a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
 /* TODO 2: Style the container card */
 
 
