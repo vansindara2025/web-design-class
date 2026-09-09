@@ -1,0 +1,500 @@
+<!-- exercise1.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Breakpoint — Learn Responsive CSS</title>
+<style>
+  :root{
+    --paper:        #f7f5f0;
+    --panel:        #ffffff;
+    --panel-line:   #e2ddd2;
+    --ink:          #1a2233;
+    --ink-muted:    #6b7280;
+    --chalk:        #0f766e;      /* accent: measurements, live values */
+    --chalk-dim:    rgba(15,118,110,0.10);
+    --ok:           #15803d;      /* solved */
+    --ok-dim:       rgba(21,128,61,0.08);
+    --pending:      #b45309;      /* not yet solved — not an "error" */
+    --pending-dim:  rgba(180,83,9,0.08);
+    --font-sans:    'Inter', -apple-system, 'Segoe UI', sans-serif;
+    --font-mono:    'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  }
+  *{ box-sizing: border-box; }
+
+  body{
+    margin: 0;
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 32px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 32px 100%,
+      var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+    padding-bottom: 80px;
+  }
+
+  a{ color: var(--chalk); }
+
+  .wrap{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Header ---------- */
+  header{ padding: 40px 0 24px; }
+  header p.eyebrow{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin: 0 0 6px;
+  }
+  header h1{
+    font-size: 28px;
+    margin: 0 0 10px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  header p.lede{
+    color: var(--ink-muted);
+    max-width: 58ch;
+    margin: 0;
+    font-size: 15px;
+  }
+
+  /* ---------- Live ruler ----------
+     Shows the current viewport width as a physical measurement,
+     with the two breakpoints marked like tick lines on a ruler. */
+  .ruler{
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    margin: 8px 0 32px;
+    padding: 16px 20px 20px;
+  }
+  .ruler-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .ruler-head .zone{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--chalk);
+  }
+  .ruler-head .width{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+  .ruler-head .width b{ color: var(--ink); font-weight: 600; }
+  .ruler-track{
+    position: relative;
+    height: 8px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 4px;
+  }
+  .ruler-seg{
+    position: absolute;
+    top: 0; bottom: 0;
+    border-right: 1px dashed var(--panel-line);
+  }
+  .ruler-mark{
+    position: absolute;
+    top: -18px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-muted);
+    transform: translateX(-50%);
+  }
+  .ruler-dot{
+    position: absolute;
+    top: 50%;
+    width: 14px; height: 14px;
+    background: var(--chalk);
+    border: 3px solid var(--panel);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: left 0.08s linear;
+    box-shadow: 0 0 0 3px var(--chalk-dim);
+  }
+  .ruler-progress{
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    background: var(--chalk-dim);
+    border-radius: 4px;
+  }
+  .ruler-score{
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+  .ruler-score b{ color: var(--ok); }
+
+  /* ---------- Sector cards ---------- */
+  .sector{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+  }
+  .sector-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 4px;
+  }
+  .sector h2{
+    font-size: 17px;
+    margin: 0;
+    font-weight: 600;
+  }
+  .sector h2 span{
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--ink-muted);
+    margin-bottom: 4px;
+  }
+  .badge{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .badge.pending{ color: var(--pending); background: var(--pending-dim); border-color: rgba(227,179,78,0.3); }
+  .badge.ok{ color: var(--ok); background: var(--ok-dim); border-color: rgba(143,217,154,0.3); }
+
+  .concept{
+    font-size: 14px;
+    color: var(--ink-muted);
+    margin: 14px 0;
+    padding-left: 14px;
+    border-left: 2px solid var(--panel-line);
+  }
+  .concept b{ color: var(--ink); font-weight: 600; }
+  .concept code{
+    font-family: var(--font-mono);
+    background: var(--chalk-dim);
+    color: var(--chalk);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  .mission{
+    font-size: 14px;
+    margin: 14px 0 16px;
+  }
+  .mission b{ font-weight: 600; }
+
+  details{
+    margin: 14px 0;
+    font-size: 14px;
+  }
+  details summary{
+    cursor: pointer;
+    color: var(--chalk);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    outline: none;
+  }
+  details summary:focus-visible{ outline: 2px solid var(--chalk); outline-offset: 3px; border-radius: 3px; }
+  details[open] summary{ margin-bottom: 8px; }
+  details p{ color: var(--ink-muted); margin: 6px 0; }
+  details code{
+    font-family: var(--font-mono);
+    background: rgba(255,255,255,0.06);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* the actual editable stylesheet, shown as a code block */
+  .code-note{
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-muted);
+    margin: 16px 0 6px;
+  }
+  .s1-box{ width: 1100px; } /* far too wide for a phone — try resizing narrow */
+
+  .s2-row{ display: block; white-space: nowrap; }
+  .s2-row .sandbox-box{ display: inline-block; white-space: normal; width: 200px; vertical-align: top; }
+
+  .s3-grid{ display: flex; }
+  .s3-grid .sandbox-box{ min-width: 220px; flex: none; }
+
+  .s4-panel, .s4-extra{ background: #33526e; } /* .s4-extra is visible by default until Sector 4 hides it below 768px */
+
+  footer{
+    max-width: 720px;
+    margin: 24px auto 0;
+    padding: 0 24px;
+    color: var(--ink-muted);
+    font-size: 13px;
+  }
+
+  /* keyboard focus visibility, kept simple */
+  :focus-visible{ outline: 2px solid var(--chalk); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .ruler-dot{ transition: none; }
+  }
+
+  /* ---------- Live preview sandbox ---------- */
+  .preview{
+    background: var(--paper);
+    border: 1px solid var(--panel-line);
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 6px;
+    overflow-x: auto; /* so an unfixed, oversized exercise scrolls here instead of breaking the page */
+  }
+  .sandbox-box{
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    padding: 14px;
+    border-radius: 6px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-muted);
+  }
+  .s4-panel, .s4-extra{ padding: 14px; text-align: center; border-radius: 6px; font-family: var(--font-mono); font-size: 13px; }
+  .s4-extra{ margin-top: 8px; }
+
+</style>
+<link rel="stylesheet" href="exercise1.css">
+</head>
+<body>
+
+  <div class="wrap">
+
+    <header>
+      <p class="eyebrow">Responsive CSS · four short exercises</p>
+      <h1>Breakpoint</h1>
+      <p class="lede">A page is "responsive" when its layout adapts to the width of the
+      screen showing it. Below, drag your browser window narrower and wider —
+      watch the ruler and you'll see the same three zones every responsive
+      site is built around: mobile, tablet, desktop.</p>
+    </header>
+
+    <div class="ruler">
+      <div class="ruler-head">
+        <span class="zone" id="zone-label">—</span>
+        <span class="width">viewport: <b id="live-width">0</b>px</span>
+      </div>
+      <div class="ruler-track" id="ruler-track">
+        <div class="ruler-progress" id="ruler-progress"></div>
+        <div class="ruler-seg" style="left:0%"></div>
+        <div class="ruler-mark" id="mark-768" style="left:0%">768</div>
+        <div class="ruler-mark" id="mark-1024" style="left:0%">1024</div>
+        <div class="ruler-dot" id="ruler-dot" style="left:0%"></div>
+      </div>
+      <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center;">
+        <span class="ruler-score">solved: <b id="score">0</b> / 4</span>
+        <span style="font-family:var(--font-mono); font-size:12px; color:var(--ink-muted);">resize the window to test</span>
+      </div>
+    </div>
+
+    <!-- SECTOR 1 -->
+    <section class="sector">
+      <div class="sector-top">
+        <h2><span>Sector 1</span>Fluid sizing</h2>
+        <span class="badge pending" id="s1-badge">not yet</span>
+      </div>
+      <p class="concept">A size in <b>pixels</b> is fixed — it stays the same on a phone
+        and on a cinema display. A size in <b>percent</b> is relative to the parent
+        element, so it scales with the screen. Most fluid elements combine both:
+        e.g. <code>width: 60%;</code> to scale, and <code>max-width</code> to stop
+        it from growing forever on huge screens.</p>
+      <p class="mission">Make <code>.s1-box</code> take up <b>90%</b> of its parent's
+        width, but never exceed <b>800px</b>. Center it horizontally.</p>
+      <details>
+        <summary>Need a hint?</summary>
+        <p>You'll need three declarations: <code>width</code>, <code>max-width</code>,
+        and a margin trick for centering a block element — set the left and right
+        margin to <code>auto</code>.</p>
+      </details>
+      <div class="preview">
+        <div class="s1-box sandbox-box">.s1-box</div>
+      </div>
+    </section>
+
+    <!-- SECTOR 2 -->
+    <section class="sector">
+      <div class="sector-top">
+        <h2><span>Sector 2</span>Flexible rows</h2>
+        <span class="badge pending" id="s2-badge">not yet</span>
+      </div>
+      <p class="concept"><b>Flexbox</b> turns on when you set <code>display: flex;</code>
+        on a container. Once it's on, you control how children share the row with
+        properties like <code>justify-content</code> (spacing along the row) and
+        <code>flex-wrap</code> (whether children drop to a new line instead of
+        squeezing forever).</p>
+      <p class="mission">Make <code>.s2-row</code> a flex container. Space its
+        children apart with <b>space-between</b>, and let them <b>wrap</b> onto a
+        new line when the row gets too narrow.</p>
+      <details>
+        <summary>Need a hint?</summary>
+        <p>Three declarations: <code>display</code>, <code>justify-content</code>,
+        <code>flex-wrap</code>.</p>
+      </details>
+      <div class="preview">
+        <div class="s2-row" style="gap:8px;">
+          <div class="sandbox-box" style="flex:1; min-width:120px;">Item A</div>
+          <div class="sandbox-box" style="flex:1; min-width:120px;">Item B</div>
+          <div class="sandbox-box" style="flex:1; min-width:120px;">Item C</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTOR 3 -->
+    <section class="sector">
+      <div class="sector-top">
+        <h2><span>Sector 3</span>A grid that adapts</h2>
+        <span class="badge pending" id="s3-badge">not yet</span>
+      </div>
+      <p class="concept"><b>CSS Grid</b> divides a container into columns with
+        <code>grid-template-columns</code>. Because it's just a normal CSS
+        property, you can redeclare it inside a <b>media query</b> to change the
+        column count once the screen crosses a certain width — that's the whole
+        idea behind a responsive grid.</p>
+      <p class="mission">Set up <code>.s3-grid</code> as a grid with <b>1 column</b>
+        by default. Inside the two media queries already scaffolded below it,
+        change it to <b>2 columns</b> at 768px and <b>3 columns</b> at 1024px.</p>
+      <details>
+        <summary>Need a hint?</summary>
+        <p>Use <code>display: grid;</code> then <code>grid-template-columns:
+        1fr;</code> for one column. For more columns, repeat <code>1fr</code>
+        that many times, e.g. <code>1fr 1fr</code> for two.</p>
+      </details>
+      <div class="preview">
+        <div class="s3-grid" style="gap:8px;">
+          <div class="sandbox-box">A</div>
+          <div class="sandbox-box">B</div>
+          <div class="sandbox-box">C</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTOR 4 -->
+    <section class="sector">
+      <div class="sector-top">
+        <h2><span>Sector 4</span>Show, hide, and restyle</h2>
+        <span class="badge pending" id="s4-badge">not yet</span>
+      </div>
+      <p class="concept">A <b>media query</b> is a condition wrapped around normal
+        CSS rules: <code>@media (min-width: 600px) { ... }</code> only applies the
+        rules inside it once the screen is at least 600px wide. You can combine
+        <code>min-width</code> and <code>max-width</code> in one query to target a
+        range, like "only on tablets."</p>
+      <p class="mission">Two separate rules: hide <code>.s4-extra</code> completely
+        below <b>768px</b>. Turn <code>.s4-panel</code>'s background <b>orange</b>
+        only between <b>768px and 1023px</b>.</p>
+      <details>
+        <summary>Need a hint?</summary>
+        <p>Hiding something uses <code>display: none;</code>. To target a range,
+        combine <code>min-width: 768px</code> and <code>max-width: 1023px</code>
+        in the same query with <code>and</code>.</p>
+      </details>
+      <div class="preview">
+        <div class="s4-panel">.s4-panel — watch this on tablet width</div>
+        <div class="s4-extra">.s4-extra — disappears under 768px</div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>Resize the browser, or open DevTools' device toolbar, to move the ruler
+  through each zone and watch the status badges update.</footer>
+
+  <script>
+    const BP1 = 768, BP2 = 1024, RULER_MAX = 1440;
+
+    function pct(px){
+      return Math.max(0, Math.min(100, (px / RULER_MAX) * 100));
+    }
+
+    function layoutRuler(){
+      document.getElementById('mark-768').style.left = pct(BP1) + '%';
+      document.getElementById('mark-1024').style.left = pct(BP2) + '%';
+    }
+
+    function evaluate(){
+      const width = window.innerWidth;
+      document.getElementById('live-width').innerText = width;
+      document.getElementById('ruler-dot').style.left = pct(width) + '%';
+      document.getElementById('ruler-progress').style.width = pct(width) + '%';
+
+      const zone = width < BP1 ? 'mobile' : (width < BP2 ? 'tablet' : 'desktop');
+      document.getElementById('zone-label').innerText = zone;
+
+      let solved = 0;
+
+      // Sector 1
+      const s1 = getComputedStyle(document.querySelector('.s1-box'));
+      const s1ok = s1.maxWidth === '800px' && s1.width !== '800px' &&
+                   s1.marginLeft === s1.marginRight && parseFloat(s1.marginLeft) > 0;
+      setBadge('s1-badge', s1ok); if (s1ok) solved++;
+
+      // Sector 2
+      const s2 = getComputedStyle(document.querySelector('.s2-row'));
+      const s2ok = s2.display === 'flex' && s2.flexWrap === 'wrap' &&
+                   s2.justifyContent === 'space-between';
+      setBadge('s2-badge', s2ok); if (s2ok) solved++;
+
+      // Sector 3 — must actually be display:grid, not just have one
+      // token in gridTemplateColumns (an unstyled element computes
+      // that as "none", which used to be miscounted as 1 column).
+      const s3 = getComputedStyle(document.querySelector('.s3-grid'));
+      const isGrid = s3.display === 'grid';
+      const cols = isGrid ? s3.gridTemplateColumns.split(' ').filter(Boolean).length : 0;
+      let s3ok = false;
+      if (isGrid){
+        if (width < BP1 && cols === 1) s3ok = true;
+        if (width >= BP1 && width < BP2 && cols === 2) s3ok = true;
+        if (width >= BP2 && cols >= 3) s3ok = true;
+      }
+      setBadge('s3-badge', s3ok); if (s3ok) solved++;
+
+      // Sector 4
+      const extraDisplay = getComputedStyle(document.querySelector('.s4-extra')).display;
+      const panelBg = getComputedStyle(document.querySelector('.s4-panel')).backgroundColor;
+      const isOrange = panelBg === 'rgb(255, 165, 0)' || panelBg === 'orange';
+      let s4ok = false;
+      if (width < BP1) s4ok = extraDisplay === 'none';
+      else if (width < BP2) s4ok = isOrange;
+      else s4ok = extraDisplay !== 'none';
+      setBadge('s4-badge', s4ok); if (s4ok) solved++;
+
+      document.getElementById('score').innerText = solved;
+    }
+
+    function setBadge(id, passed){
+      const el = document.getElementById(id);
+      el.innerText = passed ? 'solved' : 'not yet';
+      el.className = 'badge ' + (passed ? 'ok' : 'pending');
+    }
+
+    window.addEventListener('resize', evaluate);
+    window.addEventListener('load', () => { layoutRuler(); evaluate(); });
+  </script>
+
+</body>
+</html>

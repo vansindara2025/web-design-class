@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fix This Dashboard</title>
+<style>
+
+  :root{
+    --paper:        #f6f8f9;
+    --panel:        #ffffff;
+    --panel-line:   #dde5ea;
+    --ink:          #17242c;
+    --ink-muted:    #66798a;
+    --accent:       #0d9488;
+    --accent-dim:   rgba(13,148,136,0.08);
+    --ok:           #16a34a;
+    --ok-dim:       rgba(22,163,74,0.08);
+    --pending:      #b45309;
+    --pending-dim:  rgba(180,83,9,0.08);
+    --danger:       #dc2626;
+    --danger-dim:   rgba(220,38,38,0.08);
+    --font-sans:    'Inter', -apple-system, 'Segoe UI', sans-serif;
+    --font-mono:    'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  }
+  *{ box-sizing: border-box; }
+  body{ margin:0; background: var(--paper); color: var(--ink); font-family: var(--font-sans); }
+  code{ font-family: var(--font-mono); background: var(--accent-dim); color: var(--accent); padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+
+  /* ---------- Instructions panel ---------- */
+  .brief{ background: var(--panel); border-bottom: 1px solid var(--panel-line); padding: 28px 24px; }
+  .brief-inner{ max-width: 900px; margin: 0 auto; }
+  .brief p.eyebrow{ font-family: var(--font-mono); font-size: 13px; color: var(--accent); margin: 0 0 6px; }
+  .brief h1{ margin: 0 0 8px; font-size: 24px; font-weight: 600; }
+  .brief p.lede{ color: var(--ink-muted); font-size: 14px; max-width: 68ch; margin: 0 0 20px; }
+
+  .status-bar{
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--paper); border: 1px solid var(--panel-line); border-radius: 8px;
+    padding: 12px 16px; margin-bottom: 20px; flex-wrap: wrap; gap: 8px;
+  }
+  .status-bar .width{ font-family: var(--font-mono); font-size: 13px; color: var(--ink-muted); }
+  .status-bar .width b{ color: var(--ink); }
+  .fits-badge{ font-family: var(--font-mono); font-size: 13px; padding: 4px 12px; border-radius: 100px; border: 1px solid transparent; }
+  .fits-badge.ok{ color: var(--ok); background: var(--ok-dim); border-color: rgba(22,163,74,0.25); }
+  .fits-badge.bad{ color: var(--danger); background: var(--danger-dim); border-color: rgba(220,38,38,0.25); }
+
+  .missions{ list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .missions li{
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 14px; color: var(--ink-muted);
+    background: var(--paper); border: 1px solid var(--panel-line); border-radius: 8px; padding: 12px 14px;
+  }
+  .missions input[type=checkbox]{ margin-top: 3px; accent-color: var(--accent); }
+  .missions b{ color: var(--ink); }
+  .missions .num{ font-family: var(--font-mono); color: var(--accent); font-size: 13px; flex-shrink: 0; }
+
+
+  .dash-topbar{
+    background: var(--panel);
+    border-bottom: 1px solid var(--panel-line);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px;
+  }
+  .dash-topbar .brand{ font-weight: 600; font-size: 15px; }
+  .dash-topbar .brand span{ color: var(--accent); }
+  .dash-topbar .search{
+    font-family: var(--font-mono); font-size: 13px; color: var(--ink-muted);
+    background: var(--paper); border: 1px solid var(--panel-line); border-radius: 6px;
+    padding: 7px 12px; width: 220px;
+  }
+
+  .dash-main{
+    padding: 28px 24px 40px;
+    min-width: 960px;        /* ← built desktop-only; this is problem #1 */
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .stat-cards{ margin-bottom: 28px; }
+  .stat-cards::after{ content: ""; display: table; clear: both; } /* clearfix for the floats below */
+  .stat-card{
+    float: left;                 /* ← never wraps; this is problem #2 */
+    width: 220px;
+    margin-right: 16px;
+    background: var(--panel);
+    border: 1px solid var(--panel-line);
+    border-radius: 8px;
+    padding: 18px;
+  }
+  .stat-card .label{ font-family: var(--font-mono); font-size: 12px; color: var(--ink-muted); margin-bottom: 6px; }
+  .stat-card .value{ font-size: 22px; font-weight: 600; }
+  .stat-card .delta{ font-family: var(--font-mono); font-size: 12px; color: var(--ok); margin-top: 4px; }
+
+  .panel{ background: var(--panel); border: 1px solid var(--panel-line); border-radius: 8px; padding: 20px; }
+  .panel h3{ margin: 0 0 14px; font-size: 15px; font-weight: 600; }
+
+  .table-scroll{ /* on purpose: no overflow rule yet — this is problem #3 */ }
+  table{ width: 100%; border-collapse: collapse; font-size: 13px; }
+  table th, table td{
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--panel-line);
+    white-space: nowrap;
+    width: 140px;               /* fixed columns force the table wide */
+  }
+  table th{ font-family: var(--font-mono); color: var(--ink-muted); font-weight: 400; font-size: 12px; }
+
+
+</style>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <div class="brief">
+    <div class="brief-inner">
+      <p class="eyebrow">Fix This Dashboard</p>
+      <h1>Fix this dashboard</h1>
+      <p class="lede">This is an admin dashboard — stat cards and a data table —
+      built and tested only at desktop width.</p>
+
+      <div class="status-bar">
+        <span class="width">viewport: <b id="live-width">0</b>px</span>
+        <span class="fits-badge" id="fits-badge">checking…</span>
+      </div>
+
+      <ul class="missions">
+        <li><span class="num">01</span><input type="checkbox"><span><b>Let the page shrink.</b> <code>.dash-main</code> has a fixed <code>min-width: 960px</code> — nothing below it can get any narrower than that, so the whole page scrolls sideways on a phone.</span></li>
+        <li><span class="num">02</span><input type="checkbox"><span><b>Let the stat cards wrap.</b> The four cards are floated with no wrapping, so they run off the right edge instead of stacking.</span></li>
+        <li><span class="num">03</span><input type="checkbox"><span><b>Contain the table.</b> The table has six fixed-width columns. Instead of squeezing them unreadably thin, let <code>.table-scroll</code> scroll horizontally on its own.</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <header class="dash-topbar">
+    <div class="brand">Break<span>point</span> Analytics</div>
+    <input class="search" type="text" placeholder="Search…" disabled>
+  </header>
+
+  <main class="dash-main">
+
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="label">Active users</div>
+        <div class="value">8,412</div>
+        <div class="delta">↑ 4.2% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Revenue</div>
+        <div class="value">$52,900</div>
+        <div class="delta">↑ 1.8% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Sessions</div>
+        <div class="value">21,003</div>
+        <div class="delta">↑ 9.1% this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Conversion</div>
+        <div class="value">3.4%</div>
+        <div class="delta">↓ 0.3% this week</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Recent orders</h3>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Order</th><th>Customer</th><th>Date</th><th>Status</th><th>Items</th><th>Total</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>#10482</td><td>Alicia Ferreira</td><td>Sep 8, 2026</td><td>Fulfilled</td><td>3</td><td>$128.00</td></tr>
+            <tr><td>#10481</td><td>Marco Bellandi</td><td>Sep 8, 2026</td><td>Pending</td><td>1</td><td>$42.50</td></tr>
+            <tr><td>#10480</td><td>Priya Natarajan</td><td>Sep 7, 2026</td><td>Fulfilled</td><td>5</td><td>$310.20</td></tr>
+            <tr><td>#10479</td><td>Sam Okafor</td><td>Sep 7, 2026</td><td>Refunded</td><td>2</td><td>$76.00</td></tr>
+            <tr><td>#10478</td><td>Lena Fischer</td><td>Sep 6, 2026</td><td>Fulfilled</td><td>4</td><td>$212.40</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    function evaluate(){
+      document.getElementById('live-width').innerText = window.innerWidth;
+      const fits = document.documentElement.scrollWidth <= window.innerWidth;
+      const badge = document.getElementById('fits-badge');
+      badge.innerText = fits ? 'no horizontal scroll ✓' : 'page overflows horizontally';
+      badge.className = 'fits-badge ' + (fits ? 'ok' : 'bad');
+    }
+    window.addEventListener('resize', evaluate);
+    window.addEventListener('load', evaluate);
+  </script>
+
+</body>
+</html>

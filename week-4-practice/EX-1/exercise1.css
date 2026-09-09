@@ -1,0 +1,50 @@
+
+  /* SECTOR 1 — .s1-box
+     Goal: width is 90% of its parent, but never wider than 800px,
+     and the box is centered. */
+  .s1-box{
+
+  }
+
+  /* SECTOR 2 — .s2-row
+     Goal: children sit in a row, spread apart, and wrap onto a
+     new line when they run out of room. */
+  .s2-row{
+
+  }
+
+  /* SECTOR 3 — .s3-grid
+     Goal: a CSS Grid that shows 1 column by default, 2 columns
+     from 768px wide, and 3 columns from 1024px wide. */
+  .s3-grid{
+
+  }
+
+  @media (min-width: 768px){
+    .s3-grid{
+
+    }
+  }
+
+  @media (min-width: 1024px){
+    .s3-grid{
+
+    }
+  }
+
+  /* SECTOR 4 — .s4-panel and .s4-extra
+     Goal: below 768px, .s4-extra is hidden entirely. Between
+     768px and 1023px, .s4-panel's background turns orange. */
+
+  @media ( ){
+    .s4-extra{
+
+    }
+  }
+
+  @media ( ){
+    .s4-panel{
+
+    }
+  }
+
