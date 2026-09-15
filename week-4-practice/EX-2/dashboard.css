@@ -7,6 +7,7 @@
        scrollbar on tablets. .dash-main currently has a
        min-width: 960px above — override or remove it here. */
     .dash-main {
+      min-width: 0;
     }
   }
 
@@ -17,6 +18,12 @@
        the edge of the screen. You can change .stat-cards and/or
        .stat-card — floats, flexbox, and grid are all valid. */
       .stat-card {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        float: none;
+        width: 100%;
+        margin-right: 0;
       }
 
 
@@ -26,6 +33,8 @@
        .table-scroll scroll horizontally on its own, so only the
        table scrolls and not the whole page. */
       .table-scroll {
+         overflow-x: auto;
+         overflow-y: hidden;
       }
 
   }
